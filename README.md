@@ -23,17 +23,71 @@ It is intentionally skeptical of narratives that look large only because the sam
 
 ---
 
+Research Board • Terminal Output • At a Glance • Operating Surfaces • How It Works • Example Output • Technical Spec • Risk Controls • Quick Start
+
+## At a Glance
+
+- `Use case`: Solana narrative ranking across Crypto Twitter windows
+- `Primary input`: credibility, source diversity, persistence, contradiction
+- `Primary failure mode`: mistaking hype loops for durable narratives
+- `Best for`: operators who want to know which stories last beyond the first engagement spike
+
 ## Research Board
 
 ![Echo Dashboard](assets/preview-dashboard.svg)
-
----
 
 ## Terminal Output
 
 ![Echo Terminal](assets/preview-terminal.svg)
 
----
+## Operating Surfaces
+
+- `Research Board`: shows which narratives are emerging, confirmed, contested, or decaying
+- `Durability Model`: scores the claim instead of just the engagement
+- `Contradiction Lens`: makes opposing evidence visible before a narrative gets promoted
+- `Terminal Output`: prints the actual story state with action context
+
+## Why Echo Exists
+
+The problem with narrative tracking is that engagement is easy to see and hard to interpret. A claim can look huge on CT and still be completely fragile once you inspect who is repeating it and whether any credible counter-argument is growing at the same time.
+
+Echo is built to make those hidden differences explicit. It is less interested in who is shouting loudest and more interested in whether the same claim survives across time, sources, and pushback.
+
+## How It Works
+
+Echo uses a disciplined narrative loop:
+
+1. fetch fresh mentions for the tracked Solana tokens
+2. cluster similar claims into one narrative lane
+3. score the lane on credibility, diversity, persistence, and contradiction
+4. downgrade claims that are viral but narrow, repetitive, or heavily contested
+5. rank the remaining narratives into a board the operator can act on
+
+The point is to identify what lasts, not what spikes for one refresh cycle.
+
+## What A Durable Narrative Looks Like
+
+- repeated by more than one quality source cluster
+- still alive across multiple windows
+- not immediately met by a strong contradictory lane
+- supported by evidence instead of only mood
+
+That usually matters more than raw engagement totals.
+
+## Example Output
+
+```text
+ECHO // NARRATIVE BOARD
+
+lead narrative     SOL fee compression
+durability         0.71
+credibility        0.78
+source diversity   0.68
+contradiction      low
+state              confirmed
+
+operator note: claim is persisting across multiple desks without strong pushback
+```
 
 ## Technical Spec
 
@@ -55,7 +109,14 @@ Operational rules:
 - score ordering is durability-adjusted, not raw engagement-only
 - action hints should cite whether the edge comes from persistence, credibility, or a decaying claim
 
----
+## Risk Controls
+
+- `credibility weighting`: prevents weak accounts from overpowering the board through raw volume
+- `contradiction penalty`: stops contested narratives from being ranked like clean ones
+- `persistence requirement`: downgrades stories that only live for one short window
+- `cluster skepticism`: filters cases where one social pocket keeps repeating itself
+
+Echo is designed to be skeptical because hype is abundant and durable narratives are rare.
 
 ## Architecture
 
@@ -67,8 +128,6 @@ Twitter fetch
   -> ranked signal board
 ```
 
----
-
 ## Quick Start
 
 ```bash
@@ -77,8 +136,6 @@ cd Echo && bun install
 cp .env.example .env
 bun run dev
 ```
-
----
 
 ## Configuration
 
@@ -92,14 +149,10 @@ CONTRADICTION_PENALTY_WEIGHT=0.15
 NARRATIVE_HALF_LIFE_MINUTES=180
 ```
 
----
-
 ## Legitimacy Notes
 
 - Planned commit sequence: [`docs/commit-sequence.md`](docs/commit-sequence.md)
 - Draft engineering issues: [`docs/issue-drafts.md`](docs/issue-drafts.md)
-
----
 
 ## License
 
