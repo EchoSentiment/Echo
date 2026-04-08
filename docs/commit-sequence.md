@@ -10,3 +10,5 @@
 8. `docs(readme): rewrite README around CT narrative persistence`
 9. `design(assets): replace generic dashboard with enterprise research board`
 10. `chore(copy): align env and package metadata with narrative intelligence terminology`
+
+Operational note: keep entity-resolution, scoring, and board-polish commits separated so the repo history feels natural.

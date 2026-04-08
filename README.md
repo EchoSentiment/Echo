@@ -17,6 +17,7 @@ Ranks claims by persistence, credibility, and contradiction instead of raw hype.
 Crypto Twitter is useful only when you can separate a durable market narrative from a one-hour engagement spike. A token can trend hard on CT and still fail if the claim came from weak accounts, died after one refresh cycle, or immediately attracted a credible opposing cluster.
 
 `Echo` fetches recent tweets for tracked Solana symbols, models author credibility and source diversity, and then asks a Claude agent to decide whether each narrative is durable, contested, or fading. The output is a ranked board of narrative signals with action hints and explicit durability context.
+It is intentionally skeptical of narratives that look large only because the same claim is being echoed in one cluster.
 
 `FETCH -> AGGREGATE -> SCORE DURABILITY -> FLAG CONTESTED -> RANK`
 
