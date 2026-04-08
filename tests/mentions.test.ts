@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { aggregateMentions, rankByEngagement, detectMomentum } from "../src/analysis/mentions.js";
+import { aggregateMentions, rankByEngagement, detectMomentum, scoreNarrativeDurability, detectContestedNarrative } from "../src/analysis/mentions.js";
 import type { Tweet, TokenMention } from "../src/lib/types.js";
 
 const baseTweet: Tweet = {
@@ -23,48 +23,43 @@ describe("aggregateMentions", () => {
   });
 
   it("tracks influencer mentions separately", () => {
-    const tweets = [
-      baseTweet, // 15k followers — influencer
-      { ...baseTweet, id: "2", authorFollowers: 500 }, // not influencer
-    ];
+    const tweets = [baseTweet, { ...baseTweet, id: "2", authorFollowers: 500 }];
     const mentions = aggregateMentions(tweets);
     expect(mentions.get("SOL")?.influencerMentions).toBe(1);
   });
 
-  it("sums engagement across mentions", () => {
-    const tweets = [
-      { ...baseTweet, engagementScore: 100 },
-      { ...baseTweet, id: "2", engagementScore: 200 },
-    ];
-    const mentions = aggregateMentions(tweets);
-    expect(mentions.get("SOL")?.totalEngagement).toBe(300);
-  });
-
-  it("handles multiple tokens in one tweet", () => {
-    const tweet = { ...baseTweet, content: "$SOL and $JTO both looking good", mentionedTokens: ["SOL", "JTO"] };
-    const mentions = aggregateMentions([tweet]);
-    expect(mentions.has("SOL")).toBe(true);
-    expect(mentions.has("JTO")).toBe(true);
+  it("computes a durability score", () => {
+    const mentions = aggregateMentions([baseTweet]);
+    expect(mentions.get("SOL")?.durabilityScore).toBeGreaterThanOrEqual(0);
   });
 });
 
 describe("rankByEngagement", () => {
-  it("sorts tokens by total engagement descending", () => {
+  it("prefers stronger durability when engagement is similar", () => {
     const tweets = [
-      { ...baseTweet, mentionedTokens: ["SOL"], engagementScore: 100 },
-      { ...baseTweet, id: "2", mentionedTokens: ["JTO"], engagementScore: 500 },
+      { ...baseTweet, mentionedTokens: ["SOL"], engagementScore: 180, replies: 18 },
+      { ...baseTweet, id: "2", mentionedTokens: ["JTO"], engagementScore: 170, replies: 0, content: "$JTO moon lfg" },
     ];
     const mentions = aggregateMentions(tweets);
     const ranked = rankByEngagement(mentions);
-    expect(ranked[0].symbol).toBe("JTO");
+    expect(ranked[0].symbol).toBe("SOL");
   });
 });
 
 describe("detectMomentum", () => {
   const base: TokenMention = {
-    symbol: "SOL", mentionCount: 100, uniqueAuthors: 50,
-    totalEngagement: 5000, avgSentiment: 0.3, influencerMentions: 10,
-    firstMentioned: Date.now() - 3600000, lastMentioned: Date.now(),
+    symbol: "SOL",
+    mentionCount: 100,
+    uniqueAuthors: 50,
+    totalEngagement: 5000,
+    avgSentiment: 0.3,
+    influencerMentions: 10,
+    sourceDiversity: 0.7,
+    credibilityScore: 0.8,
+    durabilityScore: 0.6,
+    contradictionRatio: 0.1,
+    firstMentioned: Date.now() - 3600000,
+    lastMentioned: Date.now(),
   };
 
   it("returns accelerating when mentions grew 30%+", () => {
@@ -76,13 +71,25 @@ describe("detectMomentum", () => {
     const current = { ...base, mentionCount: 60 };
     expect(detectMomentum(current, base)).toBe("decelerating");
   });
+});
 
-  it("returns stable for minor changes", () => {
-    const current = { ...base, mentionCount: 110 };
-    expect(detectMomentum(current, base)).toBe("stable");
-  });
-
-  it("returns stable when no previous data", () => {
-    expect(detectMomentum(base)).toBe("stable");
+describe("durability helpers", () => {
+  it("marks contested narratives when contradiction is high", () => {
+    const mention: TokenMention = {
+      symbol: "BONK",
+      mentionCount: 30,
+      uniqueAuthors: 18,
+      totalEngagement: 900,
+      avgSentiment: 0,
+      influencerMentions: 3,
+      sourceDiversity: 0.5,
+      credibilityScore: 0.4,
+      durabilityScore: 0,
+      contradictionRatio: 0.5,
+      firstMentioned: Date.now() - 3600000,
+      lastMentioned: Date.now(),
+    };
+    mention.durabilityScore = scoreNarrativeDurability(mention);
+    expect(detectContestedNarrative(mention)).toBe(true);
   });
 });

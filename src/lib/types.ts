@@ -1,5 +1,5 @@
 export type Sentiment = "bullish" | "bearish" | "neutral" | "hype" | "fud";
-export type NarrativeTier = "emerging" | "trending" | "peaking" | "fading";
+export type NarrativeTier = "emerging" | "confirmed" | "contested" | "decaying";
 
 export interface Tweet {
   id: string;
@@ -20,21 +20,26 @@ export interface TokenMention {
   mentionCount: number;
   uniqueAuthors: number;
   totalEngagement: number;
-  avgSentiment: number;        // -1.0 to +1.0
-  influencerMentions: number;  // accounts > 10k followers
+  avgSentiment: number;
+  influencerMentions: number;
+  sourceDiversity: number;
+  credibilityScore: number;
+  durabilityScore: number;
+  contradictionRatio: number;
   firstMentioned: number;
   lastMentioned: number;
 }
 
 export interface Narrative {
   id: string;
-  label: string;               // e.g. "AI agents", "RWA", "DePIN"
+  label: string;
   keywords: string[];
   tier: NarrativeTier;
-  momentum: number;            // velocity of mention growth
+  momentum: number;
   tweetCount: number;
   engagementTotal: number;
   tokensAssociated: string[];
+  durabilityScore: number;
   detectedAt: number;
   updatedAt: number;
 }
@@ -42,12 +47,13 @@ export interface Narrative {
 export interface SentimentSignal {
   symbol: string;
   sentiment: Sentiment;
-  score: number;               // 0-100
+  score: number;
   confidence: number;
   narratives: string[];
   topTweets: Tweet[];
   momentum: "accelerating" | "stable" | "decelerating";
-  actionHint: string;          // Claude's one-line trading hint
+  durability: number;
+  actionHint: string;
   generatedAt: number;
 }
 

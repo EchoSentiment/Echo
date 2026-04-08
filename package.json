@@ -1,7 +1,7 @@
 {
   "name": "echo",
   "version": "0.1.0",
-  "description": "CT sentiment intelligence for Solana — scans Crypto Twitter, scores narratives, and surfaces actionable signals with Claude",
+  "description": "Crypto Twitter narrative durability engine for Solana that ranks claims by persistence, credibility, and contradiction",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {

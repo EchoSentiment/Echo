@@ -10,7 +10,7 @@ const logger = createLogger("echo");
 let previousMentions = new Map<string, TokenMention>();
 
 async function scan() {
-  logger.info("─── Sentiment scan ───────────────────────────────");
+  logger.info("---------------- Narrative Scan ------------");
 
   const tokens = getTrackedTokens();
   const tweetsByToken = new Map<string, Tweet[]>();
@@ -27,19 +27,23 @@ async function scan() {
   const ranked = rankByEngagement(currentMentions);
 
   logger.info(`Fetched ${totalTweets} tweets across ${tokens.length} tokens`);
-  logger.info(`Top mention: ${ranked[0]?.symbol ?? "none"} (${ranked[0]?.totalEngagement ?? 0} engagement)`);
+  logger.info(
+    `Top narrative: ${ranked[0]?.symbol ?? "none"} (${ranked[0]?.totalEngagement ?? 0} engagement, durability ${(ranked[0]?.durabilityScore ?? 0).toFixed(2)})`,
+  );
 
   const signals = await analyzeSentiment(tokens, tweetsByToken, currentMentions, previousMentions);
   ingestSignals(signals);
 
-  const report = generateScanReport(signals, totalTweets);
+  const report = generateScanReport(signals, totalTweets, currentMentions);
   logger.info(report.summary);
 
   const leaderboard = getLeaderboard();
   if (leaderboard.length > 0) {
-    logger.info("─── Sentiment Leaderboard ────────────────────────");
-    for (const s of leaderboard.slice(0, 5)) {
-      logger.info(`  ${s.symbol.padEnd(8)} ${s.sentiment.toUpperCase().padEnd(8)} ${s.score}/100  ${s.actionHint}`);
+    logger.info("---------------- Durability Board ----------");
+    for (const signal of leaderboard.slice(0, 5)) {
+      logger.info(
+        `  ${signal.symbol.padEnd(8)} ${signal.sentiment.toUpperCase().padEnd(8)} ${signal.score}/100  dur=${signal.durability.toFixed(2)}  ${signal.actionHint}`,
+      );
     }
   }
 

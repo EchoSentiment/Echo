@@ -23,7 +23,7 @@ const tools: Anthropic.Tool[] = [
   },
   {
     name: "get_mention_stats",
-    description: "Returns mention count, engagement totals, and influencer mention count for a token",
+    description: "Returns engagement, durability, and contradiction metrics for a token narrative",
     input_schema: {
       type: "object" as const,
       properties: { symbol: { type: "string" } },
@@ -32,7 +32,7 @@ const tools: Anthropic.Tool[] = [
   },
   {
     name: "get_narrative_keywords",
-    description: "Extracts the most common phrases and keywords from tweets about a token",
+    description: "Extract the recurring claim words behind a token narrative",
     input_schema: {
       type: "object" as const,
       properties: { symbol: { type: "string" } },
@@ -41,7 +41,7 @@ const tools: Anthropic.Tool[] = [
   },
   {
     name: "submit_signal",
-    description: "Submit a completed sentiment signal for a token",
+    description: "Submit a completed narrative durability signal for a token",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -68,7 +68,7 @@ export async function analyzeSentiment(
   const messages: Anthropic.MessageParam[] = [
     {
       role: "user",
-      content: `Analyze CT sentiment for these Solana tokens: ${tokens.join(", ")}. Use the available tools to fetch tweet samples, engagement stats, and narrative keywords for each. Submit a signal for any token with confidence >= 0.5.`,
+      content: `Analyze CT narrative durability for these Solana tokens: ${tokens.join(", ")}. Use the available tools to fetch tweet samples, engagement stats, and recurring claims for each. Submit a signal for any token with confidence >= 0.5.`,
     },
   ];
 
@@ -98,12 +98,12 @@ export async function analyzeSentiment(
           result = tweets
             .sort((a, b) => b.engagementScore - a.engagementScore)
             .slice(0, input.limit ?? 10)
-            .map((t) => ({
-              author: t.author,
-              followers: t.authorFollowers,
-              content: t.content.slice(0, 200),
-              engagement: t.engagementScore,
-              age: `${Math.round((Date.now() - t.timestamp) / 60000)}m ago`,
+            .map((tweet) => ({
+              author: tweet.author,
+              followers: tweet.authorFollowers,
+              content: tweet.content.slice(0, 200),
+              engagement: tweet.engagementScore,
+              age: `${Math.round((Date.now() - tweet.timestamp) / 60000)}m ago`,
             }));
           break;
         }
@@ -119,10 +119,10 @@ export async function analyzeSentiment(
           const input = block.input as { symbol: string };
           const tweets = tweetsByToken.get(input.symbol) ?? [];
           const words = tweets
-            .flatMap((t) => t.content.toLowerCase().split(/\s+/))
-            .filter((w) => w.length > 3 && !["this", "that", "with", "from", "have"].includes(w));
+            .flatMap((tweet) => tweet.content.toLowerCase().split(/\s+/))
+            .filter((word) => word.length > 3 && !["this", "that", "with", "from", "have"].includes(word));
           const freq = new Map<string, number>();
-          for (const w of words) freq.set(w, (freq.get(w) ?? 0) + 1);
+          for (const word of words) freq.set(word, (freq.get(word) ?? 0) + 1);
           result = [...freq.entries()]
             .sort((a, b) => b[1] - a[1])
             .slice(0, 15)
@@ -132,8 +132,12 @@ export async function analyzeSentiment(
 
         case "submit_signal": {
           const input = block.input as {
-            symbol: string; sentiment: SentimentSignal["sentiment"];
-            score: number; confidence: number; narratives: string[]; actionHint: string;
+            symbol: string;
+            sentiment: SentimentSignal["sentiment"];
+            score: number;
+            confidence: number;
+            narratives: string[];
+            actionHint: string;
           };
 
           if (input.confidence >= 0.5) {
@@ -149,12 +153,15 @@ export async function analyzeSentiment(
               narratives: input.narratives,
               topTweets: tweets.sort((a, b) => b.engagementScore - a.engagementScore).slice(0, 3),
               momentum: mention ? detectMomentum(mention, prev) : "stable",
+              durability: mention?.durabilityScore ?? 0,
               actionHint: input.actionHint,
               generatedAt: Date.now(),
             };
 
             signals.push(signal);
-            logger.info(`[SIGNAL] ${signal.symbol} → ${signal.sentiment.toUpperCase()} (${signal.score}/100, conf ${signal.confidence.toFixed(2)}) | ${signal.actionHint}`);
+            logger.info(
+              `[SIGNAL] ${signal.symbol} -> ${signal.sentiment.toUpperCase()} (${signal.score}/100, durability ${signal.durability.toFixed(2)}) | ${signal.actionHint}`,
+            );
           }
 
           result = { accepted: true };

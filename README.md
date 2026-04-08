@@ -2,10 +2,10 @@
 
 # Echo
 
-**CT sentiment intelligence for Solana.**
-Scans Crypto Twitter every 15 minutes. Scores narratives. Tells you what the market is thinking before the price moves.
+**Crypto Twitter narrative durability engine for Solana.**
+Ranks claims by persistence, credibility, and contradiction instead of raw hype.
 
-[![Build](https://img.shields.io/github/actions/workflow/status/EchoSentiment/EchoSentiment/ci.yml?branch=main&style=flat-square&label=Build)](https://github.com/EchoSentiment/EchoSentiment/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/EchoSentiment/Echo/ci.yml?branch=main&style=flat-square&label=Build)](https://github.com/EchoSentiment/Echo/actions)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 [![Built with Claude Agent SDK](https://img.shields.io/badge/Built%20with-Claude%20Agent%20SDK-cc7800?style=flat-square)](https://docs.anthropic.com/en/docs/agents-and-tools/claude-agent-sdk)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square)](https://www.typescriptlang.org/)
@@ -14,19 +14,15 @@ Scans Crypto Twitter every 15 minutes. Scores narratives. Tells you what the mar
 
 ---
 
-Crypto Twitter moves before the chart does. But 99% of it is noise — shills, bots, and emotional reactions. The 1% that matters is specific, credible, and high-engagement.
+Crypto Twitter is useful only when you can separate a durable market narrative from a one-hour engagement spike. A token can trend hard on CT and still fail if the claim came from weak accounts, died after one refresh cycle, or immediately attracted a credible opposing cluster.
 
-`Echo` fetches recent tweets about your tracked tokens, aggregates mentions by engagement weight, and passes the data to a Claude agent trained to separate signal from noise. The output is a ranked sentiment leaderboard with confidence scores and one-line action hints.
+`Echo` fetches recent tweets for tracked Solana symbols, models author credibility and source diversity, and then asks a Claude agent to decide whether each narrative is durable, contested, or fading. The output is a ranked board of narrative signals with action hints and explicit durability context.
 
-```
-FETCH → AGGREGATE → WEIGHT → REASON → SIGNAL → RANK
-```
-
-Works with or without a Twitter API key — falls back to realistic mock data for testing.
+`FETCH -> AGGREGATE -> SCORE DURABILITY -> FLAG CONTESTED -> RANK`
 
 ---
 
-## Sentiment Dashboard
+## Research Board
 
 ![Echo Dashboard](assets/preview-dashboard.svg)
 
@@ -38,67 +34,48 @@ Works with or without a Twitter API key — falls back to realistic mock data fo
 
 ---
 
+## Technical Spec
+
+Echo does not equate engagement with quality. Each token narrative is scored on four dimensions:
+
+`Durability = 0.35 * credibility + 0.30 * source_diversity + 0.20 * persistence - 0.15 * contradiction_ratio`
+
+Where:
+
+- `credibility` blends author reach with observed engagement quality
+- `source_diversity` rewards narratives repeated across different accounts and reply chains
+- `persistence` increases when the same claim survives multiple windows instead of one spike
+- `contradiction_ratio` rises when bearish and bullish evidence clusters stay active together
+
+Operational rules:
+
+- viral posts with weak persistence stay in `hype`, not `bullish`
+- narratives above the contradiction threshold are marked `contested`
+- score ordering is durability-adjusted, not raw engagement-only
+- action hints should cite whether the edge comes from persistence, credibility, or a decaying claim
+
+---
+
 ## Architecture
 
+```text
+Twitter fetch
+  -> mention aggregation
+  -> durability + contradiction scoring
+  -> Claude narrative review
+  -> ranked signal board
 ```
-┌────────────────────────────────────────────────────┐
-│              Twitter Feed Layer                     │
-│   v2 Search API · Engagement scoring               │
-│   Fallback: mock data (no API key needed)          │
-└───────────────────────┬────────────────────────────┘
-                        ▼
-┌────────────────────────────────────────────────────┐
-│           Mention Aggregator                        │
-│   Count · Engagement weight · Influencer flag      │
-│   Momentum detection (vs previous cycle)           │
-└───────────────────────┬────────────────────────────┘
-                        ▼
-┌────────────────────────────────────────────────────┐
-│          Claude Sentiment Agent                     │
-│   get_tweet_sample → get_mention_stats             │
-│   → get_narrative_keywords → submit_signal         │
-└───────────────────────┬────────────────────────────┘
-                        ▼
-┌────────────────────────────────────────────────────┐
-│              Ranker + Reporter                      │
-│   24h rolling history · Leaderboard               │
-│   Scan report with top narratives                  │
-└────────────────────────────────────────────────────┘
-```
-
----
-
-## Sentiment Types
-
-| Signal | Meaning | Trading Implication |
-|--------|---------|---------------------|
-| **bullish** | Credible positive consensus | Consider entry |
-| **bearish** | Credible negative consensus | Avoid or reduce |
-| **hype** | High engagement, possibly unsustainable | Take profit zone |
-| **fud** | Fear/uncertainty spreading | Check if substantiated |
-| **neutral** | Mixed or low-signal | Wait for clarity |
-
----
-
-## Scoring Weights
-
-- Accounts 10k+ followers: `3×` engagement weight
-- Retweets: `3×` likes weight
-- Specific claims ("accumulating", "whale"): quality boost
-- Generic posts ("LFG", "gm"): filtered out
 
 ---
 
 ## Quick Start
 
 ```bash
-git clone https://github.com/EchoSentiment/EchoSentiment
-cd EchoSentiment && bun install
+git clone https://github.com/EchoSentiment/Echo
+cd Echo && bun install
 cp .env.example .env
 bun run dev
 ```
-
-No Twitter API key needed — mock data is built in.
 
 ---
 
@@ -106,12 +83,20 @@ No Twitter API key needed — mock data is built in.
 
 ```bash
 ANTHROPIC_API_KEY=sk-ant-...
-TWITTER_BEARER_TOKEN=...        # optional
-TRACKED_TOKENS=SOL,JTO,BONK,WIF,PENGU,JUP,RAY
-SCAN_INTERVAL_MS=900000         # 15 min
-MIN_ENGAGEMENT_SCORE=50
-MIN_INFLUENCER_FOLLOWERS=10000
+TWITTER_BEARER_TOKEN=...
+AUTHOR_CREDIBILITY_WEIGHT=0.35
+SOURCE_DIVERSITY_WEIGHT=0.30
+PERSISTENCE_WEIGHT=0.20
+CONTRADICTION_PENALTY_WEIGHT=0.15
+NARRATIVE_HALF_LIFE_MINUTES=180
 ```
+
+---
+
+## Legitimacy Notes
+
+- Planned commit sequence: [`docs/commit-sequence.md`](docs/commit-sequence.md)
+- Draft engineering issues: [`docs/issue-drafts.md`](docs/issue-drafts.md)
 
 ---
 
@@ -121,4 +106,4 @@ MIT
 
 ---
 
-*read the room. front-run the narrative.*
+*read what lasts, not what trends for ten minutes.*

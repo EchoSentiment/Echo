@@ -1,89 +1,57 @@
-<svg width="720" height="440" viewBox="0 0 720 440" xmlns="http://www.w3.org/2000/svg" font-family="'Cascadia Code','Fira Code','Courier New',monospace">
-  <rect width="720" height="440" rx="10" fill="#080810"/>
-  <rect width="720" height="48" rx="10" fill="#0e0e1c"/>
-  <rect y="32" width="720" height="16" fill="#0e0e1c"/>
-  <text x="20" y="30" fill="#a78bfa" font-size="16" font-weight="bold">◈ ECHO</text>
-  <text x="74" y="30" fill="#555" font-size="12">CT sentiment intelligence</text>
-  <text x="512" y="30" fill="#27c93f" font-size="11">● SCANNING</text>
-  <text x="590" y="30" fill="#555" font-size="11">7 tokens tracked</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720">
+  <rect width="1200" height="720" fill="#f4efe6"/>
+  <rect x="34" y="30" width="1132" height="660" rx="28" fill="#fbf8f1" stroke="#d6c9b2"/>
+  <text x="74" y="86" fill="#23313a" font-size="34" font-family="Arial">Echo // Narrative Research Board</text>
+  <text x="74" y="118" fill="#6f7c83" font-size="16" font-family="Arial">durability, contradiction, author quality, evidence lanes</text>
 
-  <!-- stats row -->
-  <rect x="16" y="64" width="154" height="64" rx="6" fill="#0d0d1e" stroke="#1e1e3a" stroke-width="1"/>
-  <text x="28" y="82" fill="#555" font-size="10">TWEETS (15m)</text>
-  <text x="28" y="108" fill="#e0e0e0" font-size="26" font-weight="bold">2,841</text>
+  <rect x="70" y="154" width="238" height="488" rx="22" fill="#f7f2e7" stroke="#d8cab4"/>
+  <text x="96" y="190" fill="#31424d" font-size="18" font-family="Arial">Emerging</text>
+  <rect x="92" y="214" width="194" height="112" rx="18" fill="#ffffff" stroke="#d9e2d6"/>
+  <text x="112" y="248" fill="#46545d" font-size="16" font-family="Arial">BONK liquidity rotation</text>
+  <text x="112" y="280" fill="#6f7c83" font-size="14" font-family="Arial">durability 0.48 | 6 authors</text>
+  <rect x="92" y="344" width="194" height="112" rx="18" fill="#ffffff" stroke="#d9e2d6"/>
+  <text x="112" y="378" fill="#46545d" font-size="16" font-family="Arial">JTO validator fee talk</text>
+  <text x="112" y="410" fill="#6f7c83" font-size="14" font-family="Arial">durability 0.44 | evidence building</text>
 
-  <rect x="182" y="64" width="154" height="64" rx="6" fill="#0d0d1e" stroke="#1e1e3a" stroke-width="1"/>
-  <text x="194" y="82" fill="#555" font-size="10">SIGNALS FIRED</text>
-  <text x="194" y="108" fill="#a78bfa" font-size="26" font-weight="bold">7</text>
+  <rect x="328" y="154" width="238" height="488" rx="22" fill="#eef6ef" stroke="#c6d7c7"/>
+  <text x="354" y="190" fill="#31424d" font-size="18" font-family="Arial">Confirmed</text>
+  <rect x="350" y="214" width="194" height="132" rx="18" fill="#ffffff" stroke="#cde0cf"/>
+  <text x="370" y="248" fill="#46545d" font-size="16" font-family="Arial">SOL MEV fee compression</text>
+  <text x="370" y="280" fill="#6f7c83" font-size="14" font-family="Arial">durability 0.71 | credibility 0.78</text>
+  <text x="370" y="308" fill="#2f7a58" font-size="14" font-family="Arial">3 independent desks repeating the same claim</text>
+  <rect x="350" y="366" width="194" height="132" rx="18" fill="#ffffff" stroke="#cde0cf"/>
+  <text x="370" y="400" fill="#46545d" font-size="16" font-family="Arial">WIF exchange inflow fade</text>
+  <text x="370" y="432" fill="#6f7c83" font-size="14" font-family="Arial">durability 0.63 | persistent 4 windows</text>
 
-  <rect x="348" y="64" width="154" height="64" rx="6" fill="#0d0d1e" stroke="#1e1e3a" stroke-width="1"/>
-  <text x="360" y="82" fill="#555" font-size="10">BULLISH / BEARISH</text>
-  <text x="360" y="108" fill="#e0e0e0" font-size="26" font-weight="bold">5 / 2</text>
+  <rect x="586" y="154" width="238" height="488" rx="22" fill="#fbf0ec" stroke="#e3c8be"/>
+  <text x="612" y="190" fill="#31424d" font-size="18" font-family="Arial">Contested</text>
+  <rect x="608" y="214" width="194" height="132" rx="18" fill="#ffffff" stroke="#e4d0c6"/>
+  <text x="628" y="248" fill="#46545d" font-size="16" font-family="Arial">POPCAT breakout claim</text>
+  <text x="628" y="280" fill="#6f7c83" font-size="14" font-family="Arial">contradiction 0.49 | durability 0.41</text>
+  <text x="628" y="308" fill="#c1684d" font-size="14" font-family="Arial">bullish call meets unlock-pressure pushback</text>
+  <rect x="608" y="366" width="194" height="132" rx="18" fill="#ffffff" stroke="#e4d0c6"/>
+  <text x="628" y="400" fill="#46545d" font-size="16" font-family="Arial">JUP fee switch debate</text>
+  <text x="628" y="432" fill="#6f7c83" font-size="14" font-family="Arial">split narrative across governance voices</text>
 
-  <rect x="514" y="64" width="190" height="64" rx="6" fill="#0d0d1e" stroke="#1e1e3a" stroke-width="1"/>
-  <text x="526" y="82" fill="#555" font-size="10">TOP NARRATIVE</text>
-  <text x="526" y="102" fill="#a78bfa" font-size="13">AI agents</text>
-  <text x="526" y="120" fill="#555" font-size="11">▲ accelerating</text>
-
-  <!-- sentiment leaderboard -->
-  <text x="20" y="154" fill="#444" font-size="10">SENTIMENT LEADERBOARD</text>
-  <rect x="16" y="160" width="688" height="1" fill="#1a1a2e"/>
-
-  <!-- header row -->
-  <text x="28" y="178" fill="#444" font-size="10">TOKEN</text>
-  <text x="110" y="178" fill="#444" font-size="10">SENTIMENT</text>
-  <text x="220" y="178" fill="#444" font-size="10">SCORE</text>
-  <text x="290" y="178" fill="#444" font-size="10">CONF</text>
-  <text x="360" y="178" fill="#444" font-size="10">MOMENTUM</text>
-  <text x="460" y="178" fill="#444" font-size="10">ACTION HINT</text>
-
-  <!-- SOL row -->
-  <rect x="16" y="184" width="688" height="32" rx="3" fill="#0d1a0d"/>
-  <text x="28" y="204" fill="#27c93f" font-size="12" font-weight="bold">SOL</text>
-  <text x="110" y="204" fill="#27c93f" font-size="11">bullish</text>
-  <text x="220" y="204" fill="#e0e0e0" font-size="11">82/100</text>
-  <text x="290" y="204" fill="#aaa" font-size="11">0.87</text>
-  <text x="360" y="204" fill="#27c93f" font-size="11">▲ accelerating</text>
-  <text x="460" y="204" fill="#aaa" font-size="10">Strong accumulation signal, watch $180 resistance</text>
-
-  <!-- JTO row -->
-  <rect x="16" y="220" width="688" height="32" rx="3" fill="#111120"/>
-  <text x="28" y="240" fill="#a78bfa" font-size="12" font-weight="bold">JTO</text>
-  <text x="110" y="240" fill="#ffbd2e" font-size="11">hype</text>
-  <text x="220" y="240" fill="#e0e0e0" font-size="11">74/100</text>
-  <text x="290" y="240" fill="#aaa" font-size="11">0.79</text>
-  <text x="360" y="240" fill="#ffbd2e" font-size="11">▲ accelerating</text>
-  <text x="460" y="240" fill="#aaa" font-size="10">CT momentum high but possible blow-off top — take profit zone</text>
-
-  <!-- BONK row -->
-  <rect x="16" y="256" width="688" height="32" rx="3" fill="#0d1a0d"/>
-  <text x="28" y="276" fill="#27c93f" font-size="12" font-weight="bold">BONK</text>
-  <text x="110" y="276" fill="#27c93f" font-size="11">bullish</text>
-  <text x="220" y="276" fill="#e0e0e0" font-size="11">68/100</text>
-  <text x="290" y="276" fill="#aaa" font-size="11">0.71</text>
-  <text x="360" y="276" fill="#aaa" font-size="11">→ stable</text>
-  <text x="460" y="276" fill="#aaa" font-size="10">Steady accumulation from mid-size accounts, no major sells</text>
-
-  <!-- WIF row -->
-  <rect x="16" y="292" width="688" height="32" rx="3" fill="#111120"/>
-  <text x="28" y="312" fill="#e0e0e0" font-size="12" font-weight="bold">WIF</text>
-  <text x="110" y="312" fill="#aaa" font-size="11">neutral</text>
-  <text x="220" y="312" fill="#e0e0e0" font-size="11">51/100</text>
-  <text x="290" y="312" fill="#aaa" font-size="11">0.62</text>
-  <text x="360" y="312" fill="#aaa" font-size="11">→ stable</text>
-  <text x="460" y="312" fill="#aaa" font-size="10">No clear direction — mixed CT, wait for clarity</text>
-
-  <!-- RAY row -->
-  <rect x="16" y="328" width="688" height="32" rx="3" fill="#1a0808"/>
-  <text x="28" y="348" fill="#e05c5c" font-size="12" font-weight="bold">RAY</text>
-  <text x="110" y="348" fill="#e05c5c" font-size="11">bearish</text>
-  <text x="220" y="348" fill="#e0e0e0" font-size="11">31/100</text>
-  <text x="290" y="348" fill="#aaa" font-size="11">0.74</text>
-  <text x="360" y="348" fill="#e05c5c" font-size="11">▼ decelerating</text>
-  <text x="460" y="348" fill="#aaa" font-size="10">Unlock FUD spreading from credible accounts — avoid</text>
-
-  <!-- footer -->
-  <rect x="0" y="410" width="720" height="30" rx="4" fill="#080810"/>
-  <text x="20" y="428" fill="#333" font-size="10">scanning every 15min · twitter v2 api · mock data when no bearer token</text>
-  <text x="680" y="428" fill="#333" font-size="10">v0.1.0</text>
+  <rect x="844" y="154" width="286" height="488" rx="22" fill="#f5f5f1" stroke="#d8d8cf"/>
+  <text x="870" y="190" fill="#31424d" font-size="18" font-family="Arial">Evidence Rail</text>
+  <text x="870" y="236" fill="#6f7c83" font-size="14" font-family="Arial">Author quality</text>
+  <rect x="870" y="248" width="210" height="18" rx="9" fill="#dfe6ea"/>
+  <rect x="870" y="248" width="162" height="18" rx="9" fill="#7ea17e"/>
+  <text x="1092" y="262" fill="#2f7a58" font-size="13" font-family="Arial">0.77</text>
+  <text x="870" y="302" fill="#6f7c83" font-size="14" font-family="Arial">Source diversity</text>
+  <rect x="870" y="314" width="210" height="18" rx="9" fill="#dfe6ea"/>
+  <rect x="870" y="314" width="144" height="18" rx="9" fill="#6698a8"/>
+  <text x="1092" y="328" fill="#37687a" font-size="13" font-family="Arial">0.68</text>
+  <text x="870" y="368" fill="#6f7c83" font-size="14" font-family="Arial">Persistence</text>
+  <rect x="870" y="380" width="210" height="18" rx="9" fill="#dfe6ea"/>
+  <rect x="870" y="380" width="128" height="18" rx="9" fill="#d8aa5b"/>
+  <text x="1092" y="394" fill="#9b6a17" font-size="13" font-family="Arial">0.61</text>
+  <text x="870" y="434" fill="#6f7c83" font-size="14" font-family="Arial">Contradiction ratio</text>
+  <rect x="870" y="446" width="210" height="18" rx="9" fill="#dfe6ea"/>
+  <rect x="870" y="446" width="86" height="18" rx="9" fill="#cd7c65"/>
+  <text x="1092" y="460" fill="#b25139" font-size="13" font-family="Arial">0.41</text>
+  <text x="870" y="520" fill="#46545d" font-size="15" font-family="Arial">Action</text>
+  <text x="870" y="554" fill="#23313a" font-size="15" font-family="Arial">Lean into SOL fee-compression narrative.</text>
+  <text x="870" y="582" fill="#23313a" font-size="15" font-family="Arial">Fade POPCAT until contradiction clears.</text>
 </svg>
