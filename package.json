@@ -1,6 +1,6 @@
 {
   "name": "echo",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Crypto Twitter narrative durability engine for Solana that ranks claims by persistence, credibility, and contradiction",
   "type": "module",
   "main": "dist/index.js",
@@ -15,6 +15,12 @@
     "@anthropic-ai/sdk": "^0.39.0",
     "zod": "^3.23.0"
   },
+  "keywords": [
+    "solana",
+    "narratives",
+    "ct",
+    "sentiment"
+  ],
   "devDependencies": {
     "@types/node": "^22.0.0",
     "tsup": "^8.0.0",
