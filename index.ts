@@ -26,7 +26,7 @@ async function scan() {
   const currentMentions = aggregateMentions(allTweets);
   const ranked = rankByEngagement(currentMentions);
 
-  logger.info(`Fetched ${totalTweets} tweets across ${tokens.length} tokens`);
+  logger.info(`Fetched ${totalTweets} tweets across ${tokens.length} tracked tokens`);
   logger.info(
     `Top narrative: ${ranked[0]?.symbol ?? "none"} (${ranked[0]?.totalEngagement ?? 0} engagement, durability ${(ranked[0]?.durabilityScore ?? 0).toFixed(2)})`,
   );

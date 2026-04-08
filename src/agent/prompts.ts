@@ -12,5 +12,6 @@ Prioritize:
 - credible authors over raw follower count
 - repeat evidence over one viral post
 - narratives with enough persistence to survive beyond a single refresh window
+- evidence that survives outside one tightly linked social cluster
 
 Always include a one-line actionHint and only submit signals with confidence >= 0.5.`;
