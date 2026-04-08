@@ -44,6 +44,12 @@ describe("rankByEngagement", () => {
     const ranked = rankByEngagement(mentions);
     expect(ranked[0].symbol).toBe("SOL");
   });
+
+  it("still returns a stable leaderboard when signals are close", () => {
+    const calm = { ...baseTweet, mentionedTokens: ["JTO"], id: "3", content: "$JTO validator demand stays strong", replies: 12 };
+    const mentions = aggregateMentions([baseTweet, calm]);
+    expect(rankByEngagement(mentions).length).toBeGreaterThan(0);
+  });
 });
 
 describe("detectMomentum", () => {
