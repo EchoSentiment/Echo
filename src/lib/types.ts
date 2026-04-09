@@ -5,6 +5,7 @@ export interface Tweet {
   id: string;
   author: string;
   authorFollowers: number;
+  sourceKind: "twitter" | "mock";
   content: string;
   likes: number;
   retweets: number;
@@ -19,6 +20,8 @@ export interface TokenMention {
   mint?: string;
   mentionCount: number;
   uniqueAuthors: number;
+  bullishMentions: number;
+  bearishMentions: number;
   totalEngagement: number;
   avgSentiment: number;
   influencerMentions: number;

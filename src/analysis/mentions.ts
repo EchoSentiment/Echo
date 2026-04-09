@@ -32,6 +32,7 @@ export function detectContestedNarrative(mention: TokenMention): boolean {
 
 export function aggregateMentions(tweets: Tweet[]): Map<string, TokenMention> {
   const map = new Map<string, TokenMention>();
+  const authorSets = new Map<string, Set<string>>();
 
   for (const tweet of tweets) {
     const sentiment = inferTweetSentiment(tweet);
@@ -39,16 +40,26 @@ export function aggregateMentions(tweets: Tweet[]): Map<string, TokenMention> {
 
     for (const symbol of tweet.mentionedTokens) {
       const existing = map.get(symbol);
+      const authors = authorSets.get(symbol) ?? new Set<string>();
+      authors.add(tweet.author);
+      authorSets.set(symbol, authors);
+      const uniqueAuthors = authors.size;
+      const nextMentionCount = (existing?.mentionCount ?? 0) + 1;
+      const diversityProxy = Number(
+        Math.min(1, uniqueAuthors / Math.max(2, Math.ceil(Math.sqrt(Math.max(1, nextMentionCount))))).toFixed(3),
+      );
 
       if (!existing) {
         map.set(symbol, {
           symbol,
           mentionCount: 1,
-          uniqueAuthors: 1,
+          uniqueAuthors,
+          bullishMentions: sentiment > 0 ? 1 : 0,
+          bearishMentions: sentiment < 0 ? 1 : 0,
           totalEngagement: tweet.engagementScore,
           avgSentiment: sentiment,
           influencerMentions: tweet.authorFollowers >= config.MIN_INFLUENCER_FOLLOWERS ? 1 : 0,
-          sourceDiversity: tweet.replies > 0 ? 0.6 : 0.35,
+          sourceDiversity: diversityProxy,
           credibilityScore: credibility,
           durabilityScore: 0,
           contradictionRatio: sentiment < 0 ? 1 : 0,
@@ -57,10 +68,17 @@ export function aggregateMentions(tweets: Tweet[]): Map<string, TokenMention> {
         });
       } else {
         existing.mentionCount++;
+        existing.uniqueAuthors = uniqueAuthors;
+        if (sentiment > 0) existing.bullishMentions++;
+        if (sentiment < 0) existing.bearishMentions++;
         existing.totalEngagement += tweet.engagementScore;
-        existing.avgSentiment = Number(((existing.avgSentiment + sentiment) / 2).toFixed(3));
-        existing.credibilityScore = Number(((existing.credibilityScore + credibility) / 2).toFixed(3));
-        existing.sourceDiversity = Number(Math.min(1, existing.sourceDiversity + (tweet.replies > 0 ? 0.08 : 0.04)).toFixed(3));
+        existing.avgSentiment = Number(
+          ((existing.avgSentiment * (existing.mentionCount - 1) + sentiment) / existing.mentionCount).toFixed(3),
+        );
+        existing.credibilityScore = Number(
+          ((existing.credibilityScore * (existing.mentionCount - 1) + credibility) / existing.mentionCount).toFixed(3),
+        );
+        existing.sourceDiversity = diversityProxy;
         if (tweet.authorFollowers >= config.MIN_INFLUENCER_FOLLOWERS) {
           existing.influencerMentions++;
         }
@@ -87,10 +105,10 @@ export function aggregateMentions(tweets: Tweet[]): Map<string, TokenMention> {
 }
 
 export function rankByEngagement(mentions: Map<string, TokenMention>): TokenMention[] {
-  return [...mentions.values()].sort((a, b) => {
-    const scoreA = a.totalEngagement * 0.5 + a.durabilityScore * 500;
-    const scoreB = b.totalEngagement * 0.5 + b.durabilityScore * 500;
-    return scoreB - scoreA;
+  return [...mentions.values()].sort((left, right) => {
+    const leftScore = left.totalEngagement * 0.5 + left.durabilityScore * 500;
+    const rightScore = right.totalEngagement * 0.5 + right.durabilityScore * 500;
+    return rightScore - leftScore;
   });
 }
 

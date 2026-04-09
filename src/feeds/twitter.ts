@@ -36,7 +36,12 @@ export async function fetchTweetsForToken(
   maxResults = 100,
 ): Promise<Tweet[]> {
   if (!config.TWITTER_BEARER_TOKEN) {
-    logger.warn("No Twitter bearer token — using mock data");
+    if (!config.ALLOW_MOCK_DATA) {
+      logger.warn(`No Twitter bearer token for ${symbol} - returning empty feed`);
+      return [];
+    }
+
+    logger.warn("No Twitter bearer token - using explicit mock data");
     return generateMockTweets(symbol, 20);
   }
 
@@ -46,7 +51,7 @@ export async function fetchTweetsForToken(
       query,
       max_results: Math.min(maxResults, 100).toString(),
       "tweet.fields": "created_at,public_metrics,author_id",
-      "expansions": "author_id",
+      expansions: "author_id",
       "user.fields": "username,public_metrics",
     });
 
@@ -58,23 +63,24 @@ export async function fetchTweetsForToken(
     const data: TwitterSearchResponse = await res.json();
 
     const userMap = new Map(
-      (data.includes?.users ?? []).map((u) => [u.id, u]),
+      (data.includes?.users ?? []).map((user) => [user.id, user]),
     );
 
-    return (data.data ?? []).map((t) => {
-      const author = userMap.get(t.author_id);
-      const engagement = t.public_metrics.like_count + t.public_metrics.retweet_count * 3;
+    return (data.data ?? []).map((tweet) => {
+      const author = userMap.get(tweet.author_id);
+      const engagement = tweet.public_metrics.like_count + tweet.public_metrics.retweet_count * 3;
 
       return {
-        id: t.id,
-        author: author?.username ?? t.author_id,
+        id: tweet.id,
+        author: author?.username ?? tweet.author_id,
         authorFollowers: author?.public_metrics.followers_count ?? 0,
-        content: t.text,
-        likes: t.public_metrics.like_count,
-        retweets: t.public_metrics.retweet_count,
-        replies: t.public_metrics.reply_count,
-        timestamp: new Date(t.created_at).getTime(),
-        mentionedTokens: extractTokenMentions(t.text),
+        sourceKind: "twitter",
+        content: tweet.text,
+        likes: tweet.public_metrics.like_count,
+        retweets: tweet.public_metrics.retweet_count,
+        replies: tweet.public_metrics.reply_count,
+        timestamp: new Date(tweet.created_at).getTime(),
+        mentionedTokens: extractTokenMentions(tweet.text, symbol),
         engagementScore: engagement,
       };
     });
@@ -84,9 +90,12 @@ export async function fetchTweetsForToken(
   }
 }
 
-function extractTokenMentions(text: string): string[] {
+function extractTokenMentions(text: string, fallbackSymbol: string): string[] {
   const cashtags = text.match(/\$([A-Z]{2,10})/g) ?? [];
-  return cashtags.map((t) => t.slice(1));
+  const mentions = new Set(cashtags.map((value) => value.slice(1)));
+  const plainSymbol = new RegExp(`\\b${fallbackSymbol}\\b`, "i");
+  if (plainSymbol.test(text)) mentions.add(fallbackSymbol.toUpperCase());
+  return [...mentions];
 }
 
 function generateMockTweets(symbol: string, count: number): Tweet[] {
@@ -101,23 +110,27 @@ function generateMockTweets(symbol: string, count: number): Tweet[] {
     `$${symbol} daily close above resistance is bullish`,
   ];
 
-  return Array.from({ length: count }, (_, i) => {
-    const template = templates[i % templates.length];
-    const followers = Math.floor(Math.random() * 50000) + 100;
-    const likes = Math.floor(Math.random() * 500);
-    const rts = Math.floor(Math.random() * 100);
+  return Array.from({ length: count }, (_, index) => {
+    const template = templates[index % templates.length];
+    const seed = symbol.split("").reduce((sum, char) => sum + char.charCodeAt(0), 0) + index * 17;
+    const followers = 100 + (seed * 97) % 50000;
+    const likes = (seed * 29) % 500;
+    const retweets = (seed * 13) % 100;
+    const replies = (seed * 11) % 50;
+    const ageMs = ((seed * 7919) % 3600) * 1000;
 
     return {
-      id: `mock_${symbol}_${i}`,
-      author: `trader_${i}`,
+      id: `mock_${symbol}_${index}`,
+      author: `trader_${index}`,
       authorFollowers: followers,
+      sourceKind: "mock",
       content: template,
       likes,
-      retweets: rts,
-      replies: Math.floor(Math.random() * 50),
-      timestamp: Date.now() - Math.random() * 3600000,
+      retweets,
+      replies,
+      timestamp: Date.now() - ageMs,
       mentionedTokens: [symbol],
-      engagementScore: likes + rts * 3,
+      engagementScore: likes + retweets * 3,
     };
   });
 }

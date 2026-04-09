@@ -3,6 +3,7 @@ import { z } from "zod";
 const schema = z.object({
   ANTHROPIC_API_KEY: z.string().min(1),
   TWITTER_BEARER_TOKEN: z.string().optional(),
+  ALLOW_MOCK_DATA: z.coerce.boolean().default(false),
   CLAUDE_MODEL: z.string().default("claude-sonnet-4-5-20251001"),
   SCAN_INTERVAL_MS: z.coerce.number().default(900_000),
   MIN_ENGAGEMENT_SCORE: z.coerce.number().default(50),
