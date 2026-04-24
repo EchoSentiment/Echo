@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+const TEST_ENV = process.env.NODE_ENV === "test" || process.env.VITEST === "true";
+
 const schema = z.object({
   ANTHROPIC_API_KEY: z.string().min(1),
   TWITTER_BEARER_TOKEN: z.string().optional(),
@@ -22,7 +24,13 @@ const schema = z.object({
 export type Config = z.infer<typeof schema>;
 
 export function loadConfig(): Config {
-  const result = schema.safeParse(process.env);
+  const env = TEST_ENV
+    ? {
+        ANTHROPIC_API_KEY: "test-anthropic-key",
+        ...process.env,
+      }
+    : process.env;
+  const result = schema.safeParse(env);
   if (!result.success) {
     const missing = result.error.issues.map((i) => i.path.join(".")).join(", ");
     throw new Error(`Invalid config: ${missing}`);
