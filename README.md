@@ -23,7 +23,7 @@ It is intentionally skeptical of narratives that look large only because the sam
 
 ---
 
-Research Board • Terminal Output • At a Glance • Operating Surfaces • How It Works • Example Output • Technical Spec • Risk Controls • Quick Start
+Research Board • Durability Model • At a Glance • Operating Surfaces • How It Works • Example Output • Technical Spec • Risk Controls • Quick Start
 
 ## At a Glance
 
@@ -34,18 +34,22 @@ Research Board • Terminal Output • At a Glance • Operating Surfaces • Ho
 
 ## Research Board
 
-![Echo Dashboard](assets/preview-dashboard.svg)
+<img src="assets/preview-dashboard.png" alt="Echo live research board" width="100%" />
 
-## Terminal Output
+Live research board for Echo: tracked narratives, durability scores, credibility markers, contradiction flags, and action hints ranked by whether the story is actually holding.
 
-![Echo Terminal](assets/preview-terminal.svg)
+## Durability Model
+
+<img src="assets/preview-durability.png" alt="Echo durability scoring model" width="100%" />
+
+How Echo ranks a narrative: raw mentions are grouped into claim clusters, scored for source quality and persistence, checked for contradictions, and promoted only when the claim survives beyond the first engagement spike.
 
 ## Operating Surfaces
 
 - `Research Board`: shows which narratives are emerging, confirmed, contested, or decaying
-- `Durability Model`: scores the claim instead of just the engagement
+- `Durability Model`: explains how source quality, persistence, and contradiction checks turn noisy mentions into ranked narrative signals
 - `Contradiction Lens`: makes opposing evidence visible before a narrative gets promoted
-- `Terminal Output`: prints the actual story state with action context
+- `Ranking Output`: promotes durable, confirmed, or contested claims with action context
 
 ## Why Echo Exists
 
