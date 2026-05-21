@@ -51,3 +51,7 @@ $RECYCLE.BIN/
 # Local SQLite snapshots
 *.sqlite
 *.sqlite3
+
+# Preview platform metadata
+.vercel/
+.netlify/
