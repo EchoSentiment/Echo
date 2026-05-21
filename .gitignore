@@ -65,3 +65,7 @@ $RECYCLE.BIN/
 *.heapsnapshot
 *.heapdump
 *.cpuprofile
+
+# Local profiling output
+profiles/
+.profiles/
